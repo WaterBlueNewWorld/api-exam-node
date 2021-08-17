@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors  = require('cors');
 const Db = require('./query');
-const {getAllUsers} = require("./query");
 const app = express();
 
 app.use(bodyParser.json({
@@ -14,7 +12,6 @@ app.use(bodyParser.urlencoded({
     limit:'100mb'
 }));
 
-app.use(cors());
 
 app.all('*', function(req,res,next){
     res.header('Access-Control-Allow-Origin','*');
@@ -23,21 +20,35 @@ app.all('*', function(req,res,next){
     next();
 });
 
-app.get('/api/users',function(req,res){
-    Db.getAllUsers().then((data)=>{
-        res.status(201).json(data[0][0]);
+app.post('/api/login', (req, res) => {
+    let body = req.body;
+
+    Db.login(body['user'], body['pass']).then((data) => {
+        res.json(data[0][0][''])
     });
 });
 
-app.post('/api/user', (req, res) => {
+/*
+
+    USERS
+
+ */
+
+app.get('/api/getUsers',function(req,res){
+    Db.getAllUsers().then((data) => {
+        res.status(201).json(data[0]);
+    });
+});
+
+app.delete('/api/deleteUser', (req, res) => {
     let body = req.body;
 
-    Db.getUser(body.id).then((data) => {
-       res.status(200).json(data[0][0] == null ? res.json({'error': 'No data'}): data[0][0]);
+    Db.deleteUser(body.id).then((data) => {
+       res.status(200).json(data);
    });
 });
 
-app.put('/api/new-user', (req,res) => {
+app.post('/api/newUser', (req,res) => {
    let body = req.body;
 
    Db.newUser(body['user'], body['pass']).then((data) => {
@@ -45,46 +56,124 @@ app.put('/api/new-user', (req,res) => {
    });
 });
 
-app.get('api/users', (req,res)=>{
-   res.json(getAllUsers());
+app.patch('/api/updateUser', (req,res) => {
+    let body = req.body;
+
+    Db.updateUser(body['id'], body['user'], body['pass']).then((data) => {
+        res.json(data);
+    });
+});
+
+/*
+
+    GROUPS
+
+ */
+app.post('/api/new-group', (req,res) => {
+    let body = req.body;
+
+    Db.newGroup(body['name']).then((data) => {
+        res.json(data);
+    });
+});
+
+app.get('/api/groups',function(req,res){
+    Db.getAllGroups().then((data)=>{
+        res.status(201).json(data[0]);
+    });
+});
+
+app.delete('/api/deleteGroup', (req,res) => {
+   let body = req.body;
+
+   Db.deleteGroup(body['id']).then((data) => {
+       res.status(418).json(data);
+   });
+});
+
+app.patch('/api/updateGroup', (req,res) => {
+    let body = req.body;
+
+    Db.updateGroup(body['id'], body['name']).then((data) => {
+        res.status(200).json(data);
+    });
+});
+
+/*
+
+    MANAGEMENT
+
+ */
+
+app.post('/api/newPersonnel', (req,res) => {
+    let body = req.body;
+
+    Db.newPersonnel(body['name'], body['tel'], body['email'], body['position'], body['address']).then((data)=>{
+       res.status(200).json(data);
+    });
+});
+
+app.patch('/api/updatePersonnel', (req,res) => {
+    let body = req.body;
+
+    Db.updatePersonnel(body['id'], body['name'], body['tel'], body['email'], body['position'], body['address']).then((data)=>{
+        res.status(200).json(data);
+    });
+});
+
+app.get('/api/getPersonnel',function(req,res){
+    Db.getAllPersonnel().then((data)=>{
+        res.status(201).json(data[0]);
+    });
+});
+
+app.delete('/api/deletePersonnel',(req,res) => {
+    let body = req.body;
+
+    Db.deletePersonnel(body['id']).then((data)=>{
+        res.status(200).json(data);
+    });
+});
+
+/*
+
+    TEACHERS
+
+ */
+
+app.get('/api/getTeachers',function(req,res){
+    Db.getAllTeachers().then((data)=>{
+        res.status(201).json(data[0]);
+    });
+});
+
+app.delete('/api/deleteTeacher',(req,res) => {
+    let body = req.body;
+
+    Db.deleteTeacher(body['id']).then((data)=>{
+        res.status(200).json(data);
+    });
+});
+
+app.patch('/api/updateTeacher', (req,res) => {
+    let body = req.body;
+
+    Db.updateTeacher(body['id'], body['name'], body['address'], body['telephone'], body['id_group']).then((data)=>{
+        res.status(200).json(data);
+    });
+});
+
+app.post('/api/newTeacher', (req,res) => {
+    let body = req.body;
+
+    Db.newTeacher(body['name'], body['address'], body['telephone'], body['id_group']).then((data)=>{
+        res.status(200).json(data);
+    });
 });
 
 
-//for the login
 
 
-
-// Update
-//app.put('/api/user',(req,res)=>{
-//    let request = req.body;
-//    let query = "UPDATE users SET name='" request.name+"', pass='" request.pass+"', phone='" request.phone+"' WHERE iduser = " request.iduser+"";
-//
-//});
-//
-//// Delete user
-//app.delete('/api/user',(req,res)=>{
-//    let request = req.body;
-//    let query = "DELETE users WHERE iduser = "+bd.iduser+"";
-//    deadpool(req,res,query);
-//});
-//
-
-// Students
-app.get('/api/student',(req,res)=>{
-    deadpool(req,res);
-});
-
-app.post('/api/student',(req,res)=>{
-    deadpool(req,res);
-});
-
-app.put('/api/student',(req,res)=>{
-    deadpool(req,res);
-});
-
-app.delete('/api/student',(req,res)=>{
-    deadpool(req,res);
-});
 
 app.listen(3000, function () {
     console.log('running at port: 3000');
