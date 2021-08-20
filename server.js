@@ -69,7 +69,7 @@ app.patch('/api/updateUser', (req,res) => {
     GROUPS
 
  */
-app.post('/api/new-group', (req,res) => {
+app.post('/api/newGroup', (req,res) => {
     let body = req.body;
 
     Db.newGroup(body['name']).then((data) => {
@@ -77,24 +77,25 @@ app.post('/api/new-group', (req,res) => {
     });
 });
 
-app.get('/api/groups',function(req,res){
+app.get('/api/getGroups',function(req,res){
     Db.getAllGroups().then((data)=>{
         res.status(201).json(data[0]);
     });
 });
 
-app.delete('/api/deleteGroup', (req,res) => {
+app.post('/api/deleteGroup', (req,res) => {
    let body = req.body;
 
-   Db.deleteGroup(body['id']).then((data) => {
+   Db.deleteGroup(body['idG']).then((data) => {
        res.status(418).json(data);
    });
 });
 
-app.patch('/api/updateGroup', (req,res) => {
+app.post('/api/updateGroup', (req,res) => {
     let body = req.body;
+    console.log(body);
 
-    Db.updateGroup(body['id'], body['name']).then((data) => {
+    Db.updateGroup(body['idG'], body['name']).then((data) => {
         res.status(200).json(data);
     });
 });
@@ -116,7 +117,7 @@ app.post('/api/newPersonnel', (req,res) => {
 app.post('/api/updatePersonnel', (req,res) => {
     let body = req.body;
 
-    Db.updatePersonnel(body['id'], body['name'], body['tel'], body['email'], body['position'], body['address']).then((data)=>{
+    Db.updatePersonnel(body['idP'], body['name'], body['tel'], body['email'], body['position'], body['address']).then((data)=>{
         res.status(200).json(data);
     });
 });
@@ -129,8 +130,9 @@ app.get('/api/getPersonnel',function(req,res){
 
 app.post('/api/deletePersonnel',(req,res) => {
     let body = req.body;
+    console.log(body);
 
-    Db.deletePersonnel(body['id']).then((data)=>{
+    Db.deletePersonnel(body['idP']).then((data)=>{
         res.status(200).json(data);
     });
 });
@@ -177,3 +179,14 @@ app.listen(3000, function () {
     console.log('running at port: 3000');
 });
 
+/*
+
+    Schools
+
+ */
+
+app.get('/api/getSchools',function(req,res){
+    Db.getAllSchools().then((data) => {
+        res.status(201).json(data[0]);
+    });
+});

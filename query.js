@@ -14,6 +14,17 @@ async function login(name, password){
   }
 }
 
+async function getAllSchools() {
+  try {
+    let conn = await sql.connect(config);
+    let query = await conn.request().query("SELECT * from api_final_exam.school");
+    return query.recordsets;
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
+
 /*
 
     USERS
@@ -118,7 +129,7 @@ async function updateGroup(id, name){
     let query = await conn.request()
         .input('id', sql.Int, id)
         .input('name', sql.NVarChar, name)
-        .query("UPDATE api_final_exam.users SET users = @name WHERE id = @id");
+        .query("UPDATE api_final_exam.groups SET group_name = @name WHERE id = @id");
     return query.recordsets;
   }catch (e) {
     console.log(e);
@@ -267,5 +278,6 @@ module.exports = {
   updateTeacher: updateTeacher,
   deleteTeacher: deleteTeacher,
   getAllTeachers:getAllTeachers,
+  getAllSchools: getAllSchools,
   login: login
 }
