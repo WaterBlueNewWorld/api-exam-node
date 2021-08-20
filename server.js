@@ -190,3 +190,12 @@ app.get('/api/getSchools',function(req,res){
         res.status(201).json(data[0]);
     });
 });
+
+
+app.post('/api/getSchools',function(req,res){
+    let body = req.body;
+
+    Db.insertSchool(body['school_name'], body['s_registry'], body['school_address'], body['telephone'], body['school_zone'], body['director']).then((data) => {
+        res.status(201).json(data[0]);
+    });
+});

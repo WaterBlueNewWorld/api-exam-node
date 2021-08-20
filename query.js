@@ -14,6 +14,12 @@ async function login(name, password){
   }
 }
 
+/*
+
+    Schools
+  
+*/
+
 async function getAllSchools() {
   try {
     let conn = await sql.connect(config);
@@ -22,6 +28,23 @@ async function getAllSchools() {
   }
   catch (error) {
     console.log(error);
+  }
+}
+
+async function insertSchool(name, registry, address, telephone, school_zone, director){
+  try{
+    let conn = await sql.connect(config);
+    let query = await conn.request()
+        .input('name', sql.NVarChar, name)
+        .input('registry', sql.Int, registry)
+        .input('address', sql.NVarChar, address)
+        .input('telephone', sql.Int, telephone)
+        .input('school_zone', sql.NVarChar, school_zone)
+        .input('director', sql.NVarChar, director)
+        .query("INSERT INTO api_final_exam.school (school_name, s_registry, school_address, telephone, school_zone, director) VALUES(@name, @registry, @address, @telephone, @school_zone, @director)");
+      return query.recordsets;
+  }catch (e){
+
   }
 }
 
@@ -200,7 +223,7 @@ async function getAllPersonnel() {
 
 /*
 
-    MANAGEMENT
+    Teachers
 
  */
 
@@ -279,5 +302,6 @@ module.exports = {
   deleteTeacher: deleteTeacher,
   getAllTeachers:getAllTeachers,
   getAllSchools: getAllSchools,
+  insertSchool: insertSchool,
   login: login
 }
