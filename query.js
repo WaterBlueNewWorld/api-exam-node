@@ -194,14 +194,15 @@ async function getAllPersonnel() {
  */
 
 async function newTeacher(name, address, telephone, groupID){
+  console.log(name + " " + address + " " + telephone + " " + groupID )
   try{
     let conn = await sql.connect(config);
     let query = await conn.request()
         .input('name', sql.NVarChar, name)
         .input('address', sql.NVarChar, address)
-        .input('tel', sql.Int, telephone)
-        .input('group', sql.NVarChar, groupID)
-        .query("INSERT INTO api_final_exam.teachers (teacher_name, teacher_address, telephone, id_group) VALUES (@name, @address, @tel, @group)");
+        .input('telephone', sql.Int, telephone)
+        .input('group', sql.Int, groupID)
+        .query("INSERT INTO api_final_exam.teachers (teacher_name, teacher_address, telephone, id_group) VALUES (@name, @address, @telephone, @group)");
     return query.recordsets;
   }catch (e) {
     console.log(e);
@@ -216,7 +217,7 @@ async function updateTeacher(id, name, address, telephone, groupID){
         .input('name', sql.NVarChar, name)
         .input('address', sql.NVarChar, address)
         .input('tel', sql.Int, telephone)
-        .input('group', sql.NVarChar, groupID)
+        .input('group', sql.Int, groupID)
         .query("UPDATE api_final_exam.teachers SET teacher_name = @name, teacher_address = @address, telephone = @tel, id_group = @group WHERE id = @id");
     return query.recordsets;
   }catch (e) {
@@ -224,12 +225,13 @@ async function updateTeacher(id, name, address, telephone, groupID){
   }
 }
 
-async function deleteTeacher(id){
+async function deleteTeacher(idT){
+  console.log(idT);
   try{
     let conn = await sql.connect(config);
     let query = await conn.request()
-        .input('id', sql.Int, id)
-        .query("DELETE FROM api_final_exam.teachers WHERE id = @id");
+        .input('idT', sql.Int, idT)
+        .query("DELETE FROM api_final_exam.teachers WHERE id = @idT");
     return query.recordsets;
   }catch (e) {
     return e;

@@ -107,13 +107,13 @@ app.patch('/api/updateGroup', (req,res) => {
 
 app.post('/api/newPersonnel', (req,res) => {
     let body = req.body;
-
+    console.log(body);
     Db.newPersonnel(body['name'], body['tel'], body['email'], body['position'], body['address']).then((data)=>{
        res.status(200).json(data);
     });
 });
 
-app.patch('/api/updatePersonnel', (req,res) => {
+app.post('/api/updatePersonnel', (req,res) => {
     let body = req.body;
 
     Db.updatePersonnel(body['id'], body['name'], body['tel'], body['email'], body['position'], body['address']).then((data)=>{
@@ -127,7 +127,7 @@ app.get('/api/getPersonnel',function(req,res){
     });
 });
 
-app.delete('/api/deletePersonnel',(req,res) => {
+app.post('/api/deletePersonnel',(req,res) => {
     let body = req.body;
 
     Db.deletePersonnel(body['id']).then((data)=>{
@@ -147,15 +147,16 @@ app.get('/api/getTeachers',function(req,res){
     });
 });
 
-app.delete('/api/deleteTeacher',(req,res) => {
+app.post('/api/deleteTeacher', (req,res) => {
     let body = req.body;
+    console.log(body);
 
-    Db.deleteTeacher(body['id']).then((data)=>{
+    Db.deleteTeacher(body['idT']).then((data)=>{
         res.status(200).json(data);
     });
 });
 
-app.patch('/api/updateTeacher', (req,res) => {
+app.post('/api/updateTeacher', (req,res) => {
     let body = req.body;
 
     Db.updateTeacher(body['id'], body['name'], body['address'], body['telephone'], body['id_group']).then((data)=>{
@@ -170,9 +171,6 @@ app.post('/api/newTeacher', (req,res) => {
         res.status(200).json(data);
     });
 });
-
-
-
 
 
 app.listen(3000, function () {
