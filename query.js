@@ -48,6 +48,17 @@ async function insertSchool(name, registry, address, telephone, school_zone, dir
   }
 }
 
+async function deleteSchool(idS) {
+  try{
+    let conn = await sql.connect(config);
+    let query = await conn.request()
+        .input('idS', sql.Int, idS)
+        .query("DELETE FROM api_final_exam.school where id = @idS")
+  }catch (e){
+
+  }
+}
+
 /*
 
     USERS
@@ -303,5 +314,6 @@ module.exports = {
   getAllTeachers:getAllTeachers,
   getAllSchools: getAllSchools,
   insertSchool: insertSchool,
+  deleteSchool:deleteSchool,
   login: login
 }
